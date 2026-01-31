@@ -1,7 +1,7 @@
 name: "توليد ملف البرنامج"
 
 on:
-  workflow_dispatch: # تشغيل يدوياً بضغطة زر
+  workflow_dispatch: 
 
 jobs:
   build:
@@ -14,11 +14,14 @@ jobs:
         with:
           channel: 'stable'
           
+      - name: "إصلاح الملفات المفقودة وإنشاء مشروع الويندوز"
+        # هذا السطر سيقوم بإنشاء مجلد windows المفقود تلقائياً
+        run: flutter create . --platforms=windows
+        
       - name: "تحميل المكتبات"
         run: flutter pub get
         
       - name: "بناء ملف EXE"
-        # تم إضافة تمكين الويندوز قبل البناء لضمان عدم الفشل
         run: |
           flutter config --enable-windows-desktop
           flutter build windows --release
