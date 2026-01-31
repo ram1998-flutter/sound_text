@@ -1,0 +1,30 @@
+name: "توليد ملف البرنامج"
+
+on:
+  workflow_dispatch: # تشغيل يدوياً بضغطة زر
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: "تثبيت فلاتر"
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          
+      - name: "تحميل المكتبات"
+        run: flutter pub get
+        
+      - name: "بناء ملف EXE"
+        # تم إضافة تمكين الويندوز قبل البناء لضمان عدم الفشل
+        run: |
+          flutter config --enable-windows-desktop
+          flutter build windows --release
+          
+      - name: "رفع الملف الناتج"
+        uses: actions/upload-artifact@v4
+        with:
+          name: SoundText-Windows-App
+          path: build/windows/x64/runner/Release/
